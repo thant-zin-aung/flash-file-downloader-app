@@ -1,22 +1,20 @@
 package com.panda.flash_file_downloader.controllers;
-import com.panda.MultiThreadedDownloader;
+import com.panda.flash_file_downloader.utils.StageSwitcher;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MainController {
     @FXML
     private TextField fileUrlBox,savePathBox;
-
-    private MultiThreadedDownloader multiThreadedDownloader;
-
-    public MainController() {
-        multiThreadedDownloader = new MultiThreadedDownloader();
-    }
 
     @FXML
     public void clickOnChooseFolderBtn() {
@@ -33,11 +31,27 @@ public class MainController {
     }
 
     @FXML
-    public void clickOnDownloadBtn() {
+    public void clickOnDownloadBtn() throws IOException {
         String fileUrl = fileUrlBox.getText();
         String savePath = savePathBox.getText();
         if(!fileUrl.isEmpty() && !savePath.isEmpty()) {
             System.out.println("Start downloading...");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/panda/flash_file_downloader/views/download-view.fxml"));
+            Parent root = loader.load();
+
+            DownloadController controller = loader.getController();
+            controller.setFileUrl(fileUrl);
+            controller.setSavePath(savePath);
+
+            Stage mainStage = (Stage) fileUrlBox.getScene().getWindow();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initStyle(StageStyle.UNDECORATED);
+            mainStage.hide();
+            stage.show();
+            StageSwitcher.addNewStage(StageSwitcher.Stages.DOWNLOAD_STAGE, stage);
+            StageSwitcher.switchStage(StageSwitcher.Stages.DOWNLOAD_STAGE);
+            controller.startDownload();
         }
     }
 

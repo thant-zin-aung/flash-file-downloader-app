@@ -1,5 +1,6 @@
 package com.panda.flash_file_downloader;
 
+import com.panda.flash_file_downloader.utils.StageSwitcher;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+        StageSwitcher.addNewStage(StageSwitcher.Stages.MAIN_STAGE, stage);
     }
 
     public static void main(String[] args) {

@@ -1,7 +1,6 @@
 module com.panda.flash_file_downloader {
     requires javafx.controls;
     requires javafx.fxml;
-    requires ResumeableDownloader;
 
 
     opens com.panda.flash_file_downloader to javafx.fxml;

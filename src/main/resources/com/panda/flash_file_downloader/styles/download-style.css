@@ -1,0 +1,49 @@
+.root {
+    -fx-background-color: #1e1e1e;
+}
+.file-name {
+    -fx-pref-width: auto;
+    -fx-text-fill: #437efb;
+}
+.button {
+    -fx-pref-width: 90px;
+    -fx-pref-height: 40px;
+    -fx-background-color: transparent;
+    -fx-border-color: #7e7e7e;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-text-fill: #7e7e7e;
+    -fx-cursor: hand;
+}
+.pause-button {
+    -fx-background-color: #437efb;
+    -fx-text-fill: white;
+
+    -fx-border-color: transparent;
+}
+.cancel-button:hover {
+    -fx-background-color: #2d2d2d;
+}
+
+
+/* Outer Track */
+.progress-bar {
+    -fx-background-radius: 8;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
+
+/* Inner Bar */
+.progress-bar .bar {
+    -fx-background-color: #1E88E5;
+    -fx-background-radius: 8;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
+
+.progress-bar > .track {
+    -fx-background-color: #454545;
+    -fx-background-radius: 10px;
+}
