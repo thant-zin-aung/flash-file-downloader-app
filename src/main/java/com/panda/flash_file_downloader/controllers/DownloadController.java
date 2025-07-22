@@ -2,6 +2,7 @@ package com.panda.flash_file_downloader.controllers;
 
 import com.panda.flash_file_downloader.utils.MultiThreadedDownloader;
 import com.panda.flash_file_downloader.utils.StageSwitcher;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -45,6 +46,10 @@ public class DownloadController {
     public void startDownload() {
         fileDownloadThread = new Thread(() -> {
             try {
+                MultiThreadedDownloader.fileNameObserver.setListener((oldValue, newValue) -> Platform.runLater(()->filenameLabel.setText(newValue)));
+//                MultiThreadedDownloader.fileSizeObserver.setListener((oldValue, newValue) -> filenameLabel.setText(newValue));
+                MultiThreadedDownloader.progressPercentObserver.setListener((oldValue, newValue) -> Platform.runLater(()->percentLabel.setText("%.2f%%".formatted(newValue))));
+                MultiThreadedDownloader.etaObserver.setListener((oldValue, newValue) -> Platform.runLater(()->etaLabel.setText(newValue)));
                 multiThreadedDownloader.downloadFile(fileUrl, savePath);
             } catch (Exception e) {
                 throw new RuntimeException(e);

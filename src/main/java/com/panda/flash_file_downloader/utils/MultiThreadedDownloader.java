@@ -14,6 +14,11 @@ public class MultiThreadedDownloader {
     private static final int THREAD_COUNT = 4; // Adjust as needed
     private static final int BUFFER_SIZE = 8192;
     private static boolean isDownloadStop = false;
+    public static ObservableValue<String> fileNameObserver = new ObservableValue<>();
+    public static ObservableValue<String> fileSizeObserver = new ObservableValue<>();
+    public static ObservableValue<Double> progressPercentObserver = new ObservableValue<>();
+    public static ObservableValue<String> connectionSpeedObserver = new ObservableValue<>();
+    public static ObservableValue<String> etaObserver = new ObservableValue<>();
 
     public void stopDownload() {
         isDownloadStop = true;
@@ -30,9 +35,12 @@ public class MultiThreadedDownloader {
         }
         String fileName = detectFileName(conn, fileURL);
         conn.disconnect();
-
+        String fileSize = (contentLength / 1024 / 1024) + " MB";
         System.out.println("Downloading: " + fileName);
-        System.out.println("File size: " + (contentLength / 1024 / 1024) + " MB");
+        System.out.println("File size: " + fileSize);
+
+        fileNameObserver.setValue(fileName);
+        fileSizeObserver.setValue(fileSize);
 
         File outputFile = new File(outputDir, fileName);
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
@@ -94,6 +102,10 @@ public class MultiThreadedDownloader {
                     long remainingBytes = contentLength - totalDownloaded;
                     long etaSeconds = (long) (speedBps > 0 ? remainingBytes / speedBps : -1);
                     String etaStr = etaSeconds >= 0 ? formatETA(etaSeconds) : "Calculating...";
+
+                    progressPercentObserver.setValue(percent);
+                    connectionSpeedObserver.setValue("%.2f MB/s".formatted(speedMBps));
+                    etaObserver.setValue(etaStr);
 
                     System.out.printf("\rDownloaded: %.2f%% (%.2f MB/s) | ETA: %s", percent, speedMBps, etaStr);
 
