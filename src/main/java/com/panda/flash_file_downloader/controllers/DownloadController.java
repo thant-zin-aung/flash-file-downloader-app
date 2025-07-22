@@ -3,6 +3,7 @@ package com.panda.flash_file_downloader.controllers;
 import com.panda.flash_file_downloader.utils.MultiThreadedDownloader;
 import com.panda.flash_file_downloader.utils.StageSwitcher;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,7 +12,7 @@ import javafx.scene.control.ProgressBar;
 public class DownloadController {
 
     @FXML
-    private Label filenameLabel, percentLabel, etaLabel;
+    private Label filenameLabel, percentLabel, connectionSpeedLabel, etaLabel;
     @FXML
     private ProgressBar progressBar;
     @FXML
@@ -46,10 +47,24 @@ public class DownloadController {
     public void startDownload() {
         fileDownloadThread = new Thread(() -> {
             try {
+                Task<Void> task = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        MultiThreadedDownloader.progressPercentObserver.setListener((oldValue, newValue) -> Platform.runLater(()-> {
+                            percentLabel.setText((int)Math.round(newValue)+"%");
+                            updateProgress(newValue, 100);
+                        }));
+                        return null;
+                    }
+                };
+
+                progressBar.progressProperty().bind(task.progressProperty());
+                new Thread(task).start();
                 MultiThreadedDownloader.fileNameObserver.setListener((oldValue, newValue) -> Platform.runLater(()->filenameLabel.setText(newValue)));
 //                MultiThreadedDownloader.fileSizeObserver.setListener((oldValue, newValue) -> filenameLabel.setText(newValue));
-                MultiThreadedDownloader.progressPercentObserver.setListener((oldValue, newValue) -> Platform.runLater(()->percentLabel.setText("%.2f%%".formatted(newValue))));
-                MultiThreadedDownloader.etaObserver.setListener((oldValue, newValue) -> Platform.runLater(()->etaLabel.setText(newValue)));
+
+                MultiThreadedDownloader.connectionSpeedObserver.setListener(((oldValue, newValue) -> Platform.runLater(()->connectionSpeedLabel.setText("("+newValue+")"))));
+                MultiThreadedDownloader.etaObserver.setListener((oldValue, newValue) -> Platform.runLater(()->etaLabel.setText("| ETA: "+newValue)));
                 multiThreadedDownloader.downloadFile(fileUrl, savePath);
             } catch (Exception e) {
                 throw new RuntimeException(e);

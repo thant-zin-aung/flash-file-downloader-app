@@ -37,18 +37,23 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <ProgressBar fx:id="progressBar" layoutX="34.0" layoutY="105.0" prefHeight="12.0" prefWidth="482.0" progress="0.18" styleClass="custom-progress" />
+      <ProgressBar fx:id="progressBar" layoutX="34.0" layoutY="105.0" prefHeight="12.0" prefWidth="482.0" styleClass="custom-progress" />
       <HBox alignment="CENTER_LEFT" layoutX="35.0" layoutY="125.0" prefHeight="31.0" prefWidth="271.0" spacing="5.0">
          <children>
-            <Label fx:id="percentLabel" text="43%" textFill="#a1a1a1">
+            <Label fx:id="percentLabel" text="0%" textFill="#a1a1a1">
                <font>
-                  <Font size="15.0" />
+                  <Font size="13.0" />
                </font>
             </Label>
             <Circle fill="#a1a1a1" radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-            <Label fx:id="etaLabel" layoutX="10.0" layoutY="15.0" text="26 seconds" textFill="#a1a1a1">
+            <Label fx:id="connectionSpeedLabel" layoutX="10.0" layoutY="15.0" textFill="#a1a1a1">
                <font>
-                  <Font size="15.0" />
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="etaLabel" layoutX="56.0" layoutY="15.0" textFill="#a1a1a1">
+               <font>
+                  <Font size="13.0" />
                </font>
             </Label>
          </children>
