@@ -1,10 +1,12 @@
 package com.panda.flash_file_downloader.controllers;
 import com.panda.flash_file_downloader.utils.StageSwitcher;
+import com.panda.flash_file_downloader.utils.UIUtility;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -45,10 +47,13 @@ public class MainController {
 
             Stage mainStage = (Stage) fileUrlBox.getScene().getWindow();
             Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initStyle(StageStyle.UNDECORATED);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
             mainStage.hide();
             stage.show();
+            UIUtility.makeStageDraggable(stage, root);
             StageSwitcher.addNewStage(StageSwitcher.Stages.DOWNLOAD_STAGE, stage);
             StageSwitcher.switchStage(StageSwitcher.Stages.DOWNLOAD_STAGE);
             controller.startDownload();
