@@ -1,6 +1,7 @@
 module com.panda.flash_file_downloader {
     requires javafx.controls;
     requires javafx.fxml;
+    requires com.fasterxml.jackson.databind;
 
 
     opens com.panda.flash_file_downloader to javafx.fxml;

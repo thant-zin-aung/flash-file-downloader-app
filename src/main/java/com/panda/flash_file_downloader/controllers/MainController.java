@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -17,6 +18,8 @@ import java.io.IOException;
 public class MainController {
     @FXML
     private TextField fileUrlBox,savePathBox;
+    @FXML
+    private CheckBox youtubeCheckbox;
 
     @FXML
     public void clickOnChooseFolderBtn() {
@@ -56,7 +59,12 @@ public class MainController {
             UIUtility.makeStageDraggable(stage, root);
             StageSwitcher.addNewStage(StageSwitcher.Stages.DOWNLOAD_STAGE, stage);
             StageSwitcher.switchStage(StageSwitcher.Stages.DOWNLOAD_STAGE);
-            controller.startDownload();
+            if(youtubeCheckbox.isSelected()) {
+                controller.setFormatId("137");
+                controller.startDownload(true);
+            } else {
+                controller.startDownload(false);
+            }
         }
     }
 

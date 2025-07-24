@@ -2,6 +2,7 @@ package com.panda.flash_file_downloader.controllers;
 
 import com.panda.flash_file_downloader.utils.MultiThreadedDownloader;
 import com.panda.flash_file_downloader.utils.StageSwitcher;
+import com.panda.flash_file_downloader.utils.yt_dlp.Youtube.YoutubeUtility;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ public class DownloadController {
 
     private String fileUrl;
     private String savePath;
+    private String formatId;
 
     private final MultiThreadedDownloader multiThreadedDownloader;
     private Thread fileDownloadThread;
@@ -44,28 +46,50 @@ public class DownloadController {
         this.savePath = savePath;
     }
 
-    public void startDownload() {
+    public String getFormatId() {
+        return formatId;
+    }
+
+    public void setFormatId(String formatId) {
+        this.formatId = formatId;
+    }
+
+    public void startDownload(boolean isYoutube) {
         fileDownloadThread = new Thread(() -> {
             try {
                 Task<Void> task = new Task<>() {
                     @Override
                     protected Void call() throws Exception {
-                        MultiThreadedDownloader.progressPercentObserver.setListener((oldValue, newValue) -> Platform.runLater(()-> {
-                            percentLabel.setText((int)Math.round(newValue)+"%");
-                            updateProgress(newValue, 100);
-                        }));
+                        if(isYoutube) {
+                            YoutubeUtility.progressPercentObserver.setListener((oldValue, newValue) -> Platform.runLater(()-> {
+                                percentLabel.setText((int)Math.round(newValue)+"%");
+                                updateProgress(newValue, 100);
+                            }));
+                        } else {
+                            MultiThreadedDownloader.progressPercentObserver.setListener((oldValue, newValue) -> Platform.runLater(()-> {
+                                percentLabel.setText((int)Math.round(newValue)+"%");
+                                updateProgress(newValue, 100);
+                            }));
+                        }
                         return null;
                     }
                 };
-
                 progressBar.progressProperty().bind(task.progressProperty());
                 new Thread(task).start();
-                MultiThreadedDownloader.fileNameObserver.setListener((oldValue, newValue) -> Platform.runLater(()->filenameLabel.setText(newValue)));
+                if(isYoutube) {
+                    YoutubeUtility.fileNameObserver.setListener((oldValue, newValue) -> Platform.runLater(()->filenameLabel.setText(newValue)));
 //                MultiThreadedDownloader.fileSizeObserver.setListener((oldValue, newValue) -> filenameLabel.setText(newValue));
+                    YoutubeUtility.connectionSpeedObserver.setListener(((oldValue, newValue) -> Platform.runLater(()->connectionSpeedLabel.setText("("+newValue+")"))));
+                    YoutubeUtility.etaObserver.setListener((oldValue, newValue) -> Platform.runLater(()->etaLabel.setText("| ETA: "+newValue)));
+                    YoutubeUtility.downloadAndMerge(formatId, fileUrl, savePath);
+                } else {
+                    MultiThreadedDownloader.fileNameObserver.setListener((oldValue, newValue) -> Platform.runLater(()->filenameLabel.setText(newValue)));
+//                MultiThreadedDownloader.fileSizeObserver.setListener((oldValue, newValue) -> filenameLabel.setText(newValue));
+                    MultiThreadedDownloader.connectionSpeedObserver.setListener(((oldValue, newValue) -> Platform.runLater(()->connectionSpeedLabel.setText("("+newValue+")"))));
+                    MultiThreadedDownloader.etaObserver.setListener((oldValue, newValue) -> Platform.runLater(()->etaLabel.setText("| ETA: "+newValue)));
+                    multiThreadedDownloader.downloadFile(fileUrl, savePath);
+                }
 
-                MultiThreadedDownloader.connectionSpeedObserver.setListener(((oldValue, newValue) -> Platform.runLater(()->connectionSpeedLabel.setText("("+newValue+")"))));
-                MultiThreadedDownloader.etaObserver.setListener((oldValue, newValue) -> Platform.runLater(()->etaLabel.setText("| ETA: "+newValue)));
-                multiThreadedDownloader.downloadFile(fileUrl, savePath);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
