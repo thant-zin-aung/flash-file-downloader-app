@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/resolution-style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.panda.flash_file_downloader.controllers.ResolutionController">
+   <children>
+      <Text fill="WHITE" layoutX="21.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Resolution">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Text>
+      <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="46.0" prefHeight="200.0" prefWidth="570.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="47.0" prefWidth="570.0">
+               <children>
+                  <RadioButton minHeight="30.0" mnemonicParsing="false" prefWidth="120.0" styleClass="labels" />
+                  <Label minHeight="30.0" prefWidth="120.0" styleClass="labels" text="144p" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="289.0" layoutY="25.0" minHeight="30.0" prefWidth="120.0" styleClass="labels" text="33.2 MB" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="296.0" layoutY="25.0" minHeight="30.0" prefWidth="120.0" styleClass="labels" text="Video" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

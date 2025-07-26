@@ -1,11 +1,13 @@
 package com.panda.flash_file_downloader.controllers;
 import com.panda.flash_file_downloader.utils.StageSwitcher;
 import com.panda.flash_file_downloader.utils.UIUtility;
+import com.panda.flash_file_downloader.utils.yt_dlp.YtDlpFormatFetcherJson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -14,12 +16,27 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MainController {
     @FXML
     private TextField fileUrlBox,savePathBox;
     @FXML
     private CheckBox youtubeCheckbox;
+    @FXML
+    private ComboBox<String> resolutionBox;
+
+    public void initialize() {
+        fileUrlBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(youtubeCheckbox.isSelected() && fileUrlBox.getText().toLowerCase().contains("https://www.youtube.com")) {
+                convertLinkToYoutubeFormat();
+                syncResolutions();
+            }
+        });
+    }
 
     @FXML
     public void clickOnChooseFolderBtn() {
@@ -60,12 +77,51 @@ public class MainController {
             StageSwitcher.addNewStage(StageSwitcher.Stages.DOWNLOAD_STAGE, stage);
             StageSwitcher.switchStage(StageSwitcher.Stages.DOWNLOAD_STAGE);
             if(youtubeCheckbox.isSelected()) {
-                controller.setFormatId("137");
-                controller.startDownload(true);
+                String selectedId = getSelectedResolutionId();
+                if( selectedId != null) {
+                    controller.setFormatId(selectedId);
+                    controller.startDownload(true);
+                }
             } else {
                 controller.startDownload(false);
             }
         }
+    }
+
+    @FXML
+    public void onChangeUrlBox() {
+        if(youtubeCheckbox.isSelected()) convertLinkToYoutubeFormat();
+    }
+    @FXML
+    public void onChangeYoutubeCheckbox() {
+        if(youtubeCheckbox.isSelected() && fileUrlBox.getText().toLowerCase().contains("https://www.youtube.com")) {
+            convertLinkToYoutubeFormat();
+            syncResolutions();
+        }
+        resolutionBox.setVisible(youtubeCheckbox.isSelected());
+    }
+
+    private void convertLinkToYoutubeFormat() {
+        fileUrlBox.setText(fileUrlBox.getText().split("&")[0]);
+    }
+
+    private void syncResolutions() {
+        resolutionBox.setVisible(true);
+        resolutionBox.getItems().clear();
+        try {
+            List<YtDlpFormatFetcherJson.Format> formats = new java.util.ArrayList<>(YtDlpFormatFetcherJson.getFormats(fileUrlBox.getText()).values().stream().toList());
+            Collections.reverse(formats);
+            resolutionBox.getItems().addAll(formats.stream()
+                    .filter(format -> !format.getFilesize().equalsIgnoreCase("unknown"))
+                    .map(format -> format.getResolution()+" - "+format.getFilesize()+" - "+format.getType()+" - "+format.getFormatId()).toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getSelectedResolutionId() {
+        if(resolutionBox.getItems().size() > 0 ) return ""+resolutionBox.getSelectionModel().getSelectedItem().split("-")[3].trim();
+        return null;
     }
 
 

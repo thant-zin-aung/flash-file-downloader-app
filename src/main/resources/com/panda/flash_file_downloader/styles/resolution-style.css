@@ -1,0 +1,10 @@
+.root {
+    -fx-background-color: #16181f;
+}
+.labels {
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+    -fx-border-style: 1px;
+    -fx-border-color: grey;
+    -fx-border-width: 0 1px 0 0;
+}

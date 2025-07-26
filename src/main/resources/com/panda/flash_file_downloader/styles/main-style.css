@@ -13,3 +13,36 @@
     -fx-background-color: #222428;
     -fx-cursor: hand;
 }
+
+
+/* dark-theme.css */
+.combo-box {
+    -fx-background-color: #1e2228;
+    -fx-text-fill: white;
+    -fx-border-color: #4d4d4d;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #1e2228;
+    -fx-text-fill: white;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #1e2228;
+    -fx-border-color: transparent;
+}
+
+.combo-box .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+
+.combo-box .list-view {
+    -fx-background-color: #1e2228;
+    -fx-control-inner-background: #1e2228;
+    -fx-border-color: #4d4d4d;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #2a2f36;
+}

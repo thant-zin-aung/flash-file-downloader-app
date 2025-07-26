@@ -36,9 +36,9 @@ public class MainApplication extends Application {
         try {
 //            System.out.println("URL: "+YtDlpManager.getDirectVideoUrl(url));
 //            System.out.println("📦 Best Formats (Video + Audio):");
-//            YtDlpFormatFetcherJson.getFormats(url).values().forEach(System.out::println);
+            YtDlpFormatFetcherJson.getFormats(url).values().forEach(System.out::println);
 //            YoutubeUtility.downloadVideo(url, "137");
-            YoutubeUtility.downloadAndMerge("137", url, "D:\\project_test_files");
+//            YoutubeUtility.downloadAndMerge("137", url, "D:\\project_test_files");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

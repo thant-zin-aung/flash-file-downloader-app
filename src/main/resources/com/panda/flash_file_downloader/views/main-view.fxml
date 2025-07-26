@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="600.0" stylesheets="@../styles/main-style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.panda.flash_file_downloader.controllers.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" stylesheets="@../styles/main-style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.panda.flash_file_downloader.controllers.MainController">
    <children>
       <Text fill="WHITE" layoutX="178.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Flash File Downloader">
          <font>
@@ -21,7 +21,7 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField fx:id="fileUrlBox" layoutX="151.0" layoutY="91.0" prefHeight="26.0" prefWidth="384.0" promptText="Enter file URL" styleClass="box">
+      <TextField fx:id="fileUrlBox" layoutX="151.0" layoutY="91.0" onInputMethodTextChanged="#onChangeUrlBox" prefHeight="26.0" prefWidth="384.0" promptText="Enter file URL" styleClass="box">
          <font>
             <Font size="13.0" />
          </font>
@@ -37,19 +37,19 @@
          </font>
       </TextField>
       <Button layoutX="420.0" layoutY="140.0" mnemonicParsing="false" onMouseClicked="#clickOnChooseFolderBtn" prefHeight="32.0" prefWidth="114.0" styleClass="box" text="Choose Folder" />
-      <Button layoutX="222.0" layoutY="254.0" mnemonicParsing="false" onMouseClicked="#clickOnDownloadBtn" prefHeight="40.0" prefWidth="158.0" text="Download">
+      <Button layoutX="222.0" layoutY="263.0" mnemonicParsing="false" onMouseClicked="#clickOnDownloadBtn" prefHeight="40.0" prefWidth="158.0" text="Download">
          <styleClass>
             <String fx:value="box" />
             <String fx:value="download-button" />
          </styleClass>
       </Button>
-      <Text fill="WHITE" layoutX="201.0" layoutY="322.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Developed by Thant Zin Aung @ 2025" />
-      <Text fill="WHITE" layoutX="221.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tza.personal.general@gmail.com">
+      <Text fill="WHITE" layoutX="201.0" layoutY="331.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Developed by Thant Zin Aung @ 2025" />
+      <Text fill="WHITE" layoutX="221.0" layoutY="347.0" strokeType="OUTSIDE" strokeWidth="0.0" text="tza.personal.general@gmail.com">
          <font>
             <Font size="11.0" />
          </font>
       </Text>
-      <CheckBox fx:id="youtubeCheckbox" layoutX="150.0" layoutY="187.0" mnemonicParsing="false" text="Youtube Download" textFill="WHITE" />
-      <ComboBox layoutX="287.0" layoutY="184.0" prefHeight="26.0" prefWidth="247.0" />
+      <CheckBox fx:id="youtubeCheckbox" layoutX="151.0" layoutY="193.0" mnemonicParsing="false" onAction="#onChangeYoutubeCheckbox" text="Youtube Download" textFill="WHITE" />
+      <ComboBox fx:id="resolutionBox" layoutX="288.0" layoutY="190.0" prefHeight="26.0" prefWidth="247.0" promptText="--- Choose resolution --" styleClass="combo-box" visible="false" />
    </children>
 </AnchorPane>

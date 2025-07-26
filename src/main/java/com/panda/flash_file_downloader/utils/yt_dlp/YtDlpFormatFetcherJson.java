@@ -16,6 +16,26 @@ public class YtDlpFormatFetcherJson {
         String type;
         String note;
 
+        public String getFormatId() {
+            return formatId;
+        }
+
+        public String getExtension() {
+            return extension;
+        }
+
+        public String getResolution() {
+            return resolution;
+        }
+
+        public String getFilesize() {
+            return filesize > 0 ? String.format("%.2f MB", filesize / 1024.0 / 1024.0) : "Unknown";
+        }
+
+        public String getType() {
+            return type;
+        }
+
         public String toString() {
             String sizeStr = filesize > 0 ? String.format("%.2f MB", filesize / 1024.0 / 1024.0) : "Unknown";
             return String.format("ID: %s | %s | %s | %s | %s", formatId, extension, resolution, sizeStr, type);
@@ -31,7 +51,7 @@ public class YtDlpFormatFetcherJson {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(process.getInputStream());
 
-        List<Format> result = new ArrayList<>();
+        List<Format> result = new LinkedList<>();
         for (JsonNode f : root.get("formats")) {
             Format format = new Format();
             format.formatId = f.get("format_id").asText();
