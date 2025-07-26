@@ -16,6 +16,7 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class MainController {
     @FXML
     public void clickOnDownloadBtn() throws IOException {
         String fileUrl = fileUrlBox.getText();
-        String savePath = savePathBox.getText();
+        String savePath = savePathBox.getText().isEmpty() ? Paths.get(System.getProperty("user.home"), "Downloads").toString() : savePathBox.getText();
         if(!fileUrl.isEmpty() && !savePath.isEmpty()) {
             System.out.println("Start downloading...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/panda/flash_file_downloader/views/download-view.fxml"));
