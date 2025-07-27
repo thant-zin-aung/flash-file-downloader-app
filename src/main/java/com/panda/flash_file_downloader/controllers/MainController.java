@@ -59,24 +59,19 @@ public class MainController {
         String savePath = savePathBox.getText().isEmpty() ? Paths.get(System.getProperty("user.home"), "Downloads").toString() : savePathBox.getText();
         if(!fileUrl.isEmpty() && !savePath.isEmpty()) {
             System.out.println("Start downloading...");
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/panda/flash_file_downloader/views/download-view.fxml"));
-            Parent root = loader.load();
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/panda/flash_file_downloader/views/download-view.fxml"));
+//            Parent root = loader.load();
 
-            DownloadController controller = loader.getController();
+            DownloadController controller = UIUtility.getDownloadController();
             controller.setFileUrl(fileUrl);
             controller.setSavePath(savePath);
 
-            Stage mainStage = (Stage) fileUrlBox.getScene().getWindow();
-            Stage stage = new Stage();
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.TRANSPARENT);
+            StageSwitcher.switchStage(StageSwitcher.Stages.MAIN_STAGE);
+            Stage mainStage = StageSwitcher.getCurrentStage();
             mainStage.hide();
-            stage.show();
-            UIUtility.makeStageDraggable(stage, root);
-            StageSwitcher.addNewStage(StageSwitcher.Stages.DOWNLOAD_STAGE, stage);
             StageSwitcher.switchStage(StageSwitcher.Stages.DOWNLOAD_STAGE);
+            Stage downloadStage = StageSwitcher.getCurrentStage();
+            downloadStage.show();
             if(youtubeCheckbox.isSelected()) {
                 String selectedId = getSelectedResolutionId();
                 if( selectedId != null) {

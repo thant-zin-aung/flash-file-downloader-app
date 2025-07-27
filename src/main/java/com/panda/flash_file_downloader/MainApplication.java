@@ -1,6 +1,7 @@
 package com.panda.flash_file_downloader;
 
 import com.panda.flash_file_downloader.utils.StageSwitcher;
+import com.panda.flash_file_downloader.utils.network.LocalDownloadServer;
 import com.panda.flash_file_downloader.utils.yt_dlp.Youtube.YoutubeUtility;
 import com.panda.flash_file_downloader.utils.yt_dlp.YtDlpFormatFetcherJson;
 import com.panda.flash_file_downloader.utils.yt_dlp.YtDlpManager;
@@ -8,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -26,8 +28,10 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) {
+        testExtension();
         launch();
 //        testYtDlp();
+
     }
 
     private static void testYtDlp() {
@@ -41,6 +45,14 @@ public class MainApplication extends Application {
 //            YoutubeUtility.downloadAndMerge("137", url, "D:\\project_test_files");
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void testExtension() {
+        try {
+            LocalDownloadServer.startServer(12345);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
