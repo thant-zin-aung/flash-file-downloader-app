@@ -1,30 +1,22 @@
 package com.panda.flash_file_downloader.controllers;
-import com.panda.flash_file_downloader.utils.StageSwitcher;
-import com.panda.flash_file_downloader.utils.UIUtility;
-import com.panda.flash_file_downloader.utils.yt_dlp.YtDlpFormatFetcherJson;
+import com.panda.flash_file_downloader.utils.network.RequestMaker;
+import com.panda.flash_file_downloader.utils.youtube.Format;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class MainController {
     @FXML
-    private TextField fileUrlBox,savePathBox;
+    private TextField fileUrlBox;
     @FXML
     private CheckBox youtubeCheckbox;
     @FXML
@@ -40,46 +32,17 @@ public class MainController {
     }
 
     @FXML
-    public void clickOnChooseFolderBtn() {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Choose Output Folder");
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        File selectedDirectory = directoryChooser.showDialog(savePathBox.getScene().getWindow());
-        if (selectedDirectory != null) {
-            savePathBox.setText(selectedDirectory.getAbsolutePath());
-            System.out.println("Selected folder: " + selectedDirectory.getAbsolutePath());
-        } else {
-            System.out.println("No folder selected.");
-        }
-    }
-
-    @FXML
-    public void clickOnDownloadBtn() throws IOException {
+    public void clickOnDownloadBtn() throws Exception {
         String fileUrl = fileUrlBox.getText();
-        String savePath = savePathBox.getText().isEmpty() ? Paths.get(System.getProperty("user.home"), "Downloads").toString() : savePathBox.getText();
-        if(!fileUrl.isEmpty() && !savePath.isEmpty()) {
+        if(!fileUrl.isEmpty()) {
             System.out.println("Start downloading...");
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/panda/flash_file_downloader/views/download-view.fxml"));
-//            Parent root = loader.load();
-
-            DownloadController controller = UIUtility.getDownloadController();
-            controller.setFileUrl(fileUrl);
-            controller.setSavePath(savePath);
-
-            StageSwitcher.switchStage(StageSwitcher.Stages.MAIN_STAGE);
-            Stage mainStage = StageSwitcher.getCurrentStage();
-            mainStage.hide();
-            StageSwitcher.switchStage(StageSwitcher.Stages.DOWNLOAD_STAGE);
-            Stage downloadStage = StageSwitcher.getCurrentStage();
-            downloadStage.show();
             if(youtubeCheckbox.isSelected()) {
                 String selectedId = getSelectedResolutionId();
                 if( selectedId != null) {
-                    controller.setFormatId(selectedId);
-                    controller.startDownload(true);
+                    RequestMaker.makeYoutubeDownloadRequest(fileUrl, selectedId);
                 }
             } else {
-                controller.startDownload(false);
+                RequestMaker.makeGeneralDownloadRequest(fileUrl);
             }
         }
     }
@@ -105,13 +68,14 @@ public class MainController {
         resolutionBox.setVisible(true);
         resolutionBox.getItems().clear();
         try {
-            List<YtDlpFormatFetcherJson.Format> formats = new java.util.ArrayList<>(YtDlpFormatFetcherJson.getFormats(fileUrlBox.getText()).values().stream().toList());
+            System.out.println(fileUrlBox.getText());
+            List<Format> formats = new java.util.ArrayList<>(RequestMaker.makeYoutubeFormatRequest(fileUrlBox.getText()));
             Collections.reverse(formats);
             resolutionBox.getItems().addAll(formats.stream()
                     .filter(format -> !format.getFilesize().equalsIgnoreCase("unknown"))
                     .map(format -> format.getResolution()+" - "+format.getFilesize()+" - "+format.getType()+" - "+format.getFormatId()).toList());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
