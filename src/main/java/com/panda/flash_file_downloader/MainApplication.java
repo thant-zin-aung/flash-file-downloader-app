@@ -3,9 +3,11 @@ package com.panda.flash_file_downloader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class MainApplication extends Application {
     @Override
@@ -15,6 +17,7 @@ public class MainApplication extends Application {
         stage.setTitle("Flash File Downloader");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("assets/img/app-logo.png"))));
         stage.show();
     }
 
